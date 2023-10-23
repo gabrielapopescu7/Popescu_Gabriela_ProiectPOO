@@ -1,0 +1,3 @@
+﻿  main.cpp
+C:\Users\Andreea Popescu\Desktop\proiect_poo_gp\proiect_poo_gp\main.cpp(50,37): warning C4305: 'initializing': truncation from 'double' to 'float'
+  proiect_poo_gp.vcxproj -> C:\Users\Andreea Popescu\Desktop\proiect_poo_gp\x64\Debug\proiect_poo_gp.exe
