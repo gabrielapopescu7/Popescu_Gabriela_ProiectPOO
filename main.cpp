@@ -88,7 +88,7 @@ public:
         this->pretIntrare = pretIntrare;
         this->durataViata = new int[this->nrPlante];
         for (int i = 0; i < this->nrPlante; i++)
-            this->durataViata[i] = i;
+            this->durataViata[i] = durataViata[i];
     }
     GradinaPlante(string numeGradina, int nrPlante, float pretIntrare):anInfiintareGradina(1998)
     {
@@ -105,6 +105,38 @@ public:
         this->durataViata = new int[this->nrPlante];
         for (int i = 0; i < this->nrPlante; i++)
             this->durataViata[i] = gp.durataViata[i];
+    }
+
+    GradinaPlante& operator=(const GradinaPlante& g)
+    {
+        if (this != &g) {
+            this->numeGradina = g.numeGradina;
+            this->nrPlante = g.nrPlante;
+            this->pretIntrare = g.pretIntrare;
+            if (this->durataViata != NULL) {
+                delete[]this->durataViata;
+            }
+            this->durataViata = new int[this->nrPlante];
+            for (int i = 0;i < this->nrPlante;i++)
+            {
+                this->durataViata[i] = g.durataViata[i];
+            }
+        }
+        return *this;
+    }
+    bool operator<(GradinaPlante g)
+    {
+        return(this->nrPlante < g.nrPlante);
+    }
+    GradinaPlante operator++() {
+        this->pretIntrare += 10;
+        return *this;
+    }
+    GradinaPlante operator++(int)
+    {
+        GradinaPlante gp = *this;
+        this->pretIntrare += 5;
+        return gp;
     }
 
     ~GradinaPlante() {
@@ -124,11 +156,11 @@ public:
 float GradinaPlante::TVABilet = 0.19;
 ostream& operator<<(ostream& out, GradinaPlante gp)
 {
-    out << "Nume gradina:" << gp.numeGradina;
-    out << "Pret Intrare:" << gp.pretIntrare;
-    out << "TVA-ul biletului:" << gp.TVABilet;
-    out << "An infiintare gradina:" << gp.anInfiintareGradina;
-    out << "Numar plante:" << gp.nrPlante;
+    out << "Nume gradina:" << gp.numeGradina<<endl;
+    out << "Pret Intrare:" << gp.pretIntrare<<endl;
+    out << "TVA-ul biletului:" << gp.TVABilet<<endl;
+    out << "An infiintare gradina:" << gp.anInfiintareGradina<<endl;
+    out << "Numar plante:" << gp.nrPlante<<endl;
     out << "Durata viata:";
     for(int i=0;i<gp.nrPlante;i++)
     {
@@ -264,7 +296,40 @@ public:
         for (int i = 0; i < this->nrFlori; i++)
             this->codFloare[i] = f.codFloare[i];
     }
-
+    Flori& operator=(const Flori& f)
+    {
+        if (this != &f)
+        {
+            this->denumire = f.denumire;
+            this->culoare = f.culoare;
+            this->nrFlori = f.nrFlori;
+           
+                if(this->codFloare!=NULL)
+                {
+                    delete[]this->codFloare;
+                }
+                this->codFloare = new int[this->nrFlori];
+                for(int i=0;i<this->nrFlori;i++)
+                {
+                    this->codFloare[i] = f.codFloare[i];
+                }
+        }
+        return*this;
+        
+    }
+   int operator()(int x) {
+       return nrFlori+x;
+    }
+    
+    bool operator<(Flori f)
+    {
+        return (this->nrFlori < f.nrFlori);
+    }
+    bool operator!()
+    {
+        return nrFlori == 0;
+    }
+    
     ~Flori() {
         if (this->codFloare != nullptr) {
             delete[] this->codFloare;
@@ -425,7 +490,38 @@ public:
         for (int i = 0; i < this->nrArbori; i++)
             this->varsta[i] = a.varsta[i];
     }
-
+    Arbori& operator=(const Arbori& a)
+    {
+        if(this!=&a)
+        {
+            this->specie = a.specie;
+            this->inaltime = a.inaltime;
+            this->nrArbori = a.nrArbori;
+            if (this->varsta != NULL)
+            {
+                delete[]this->varsta;
+            }
+            this->varsta = new int[this->nrArbori];
+            for (int i = 0; i < this->nrArbori; i++)
+            {
+                this->varsta[i] = a.varsta[i];
+            }
+        }
+        return*this;
+    }
+    bool operator||(const Arbori& in)
+    {  
+        return(nrArbori > 0) || (in.nrArbori > 0);
+    }
+    Arbori operator--(int) {
+        Arbori rez = *this;  
+        nrArbori--;  
+        return rez; 
+    }
+    bool operator&&(const Arbori& h)
+    {
+        return this->inaltime && h.inaltime;
+    }
     ~Arbori() {
         if (this->varsta != nullptr) {
             delete[] this->varsta;
@@ -486,7 +582,7 @@ int main() {
     int* durataviata = new int[2];
     durataviata[0] = 2;
     durataviata[1] = 4;
-    GradinaPlante Gradina2("Botanica", 53, 20, 1990, durataviata);
+    GradinaPlante Gradina2("Botanica", 2, 20, 1990, durataviata);
     Gradina2.afisare();
     GradinaPlante Gradina3 = Gradina2;
     Gradina3.afisare();
@@ -510,55 +606,121 @@ int main() {
     int* varste = new int[2];
     varste[0] = 10;
     varste[1] = 6;
-    Arbori arbori2("brad", 35.5, 67, varste, "joi");
+    Arbori arbori2("brad", 35.5, 2, varste, "joi");
     arbori2.afisare();
     Arbori arbori3 = arbori2;
     arbori3.afisare();
     Arbori arbori4("salcam", 21.7, 20);
     arbori4.afisare();
     cout << arbori.getinaltime();
-   
+
     cout << flori;
 
-  // cin >> arbori;
-   
- 
+    // cin >> arbori;
+
+
     cout << "-------------------------------------";
     cout << endl;
-    cout << arbori<<endl;
+    cout << arbori << endl;
 
-    cout << "-------------------------------------"<<endl;
+    cout << "-------------------------------------" << endl;
     cout << Gradina.getNumeGradina() << endl;
     cout << Gradina.getnrPlante() << endl;
     cout << Gradina.getPretIntrare() << endl;
     cout << Gradina.getTVAbilet() << endl;
     cout << Gradina.getanInfiintareGradina() << endl;
-    
+
     cout << "---------------------------------------" << endl;
     cout << flori.getDenumire() << endl;
     cout << flori.getCuloare() << endl;
     cout << flori.getlunaPlantare() << endl;
-    cout << flori.getnrFlori()<<endl;
-    cout << flori.getpretMinim()<<endl;
+    cout << flori.getnrFlori() << endl;
+    cout << flori.getpretMinim() << endl;
 
     cout << "-----------------------------------------" << endl;
     cout << arbori.getinaltime() << endl;
     cout << arbori.getnrArbori() << endl;
     cout << arbori.getinaltimeMinima() << endl;
     cout << arbori.getSpecie() << endl;
- 
 
-    cin >> Gradina;
-    cout << Gradina << endl;
-    cin >> flori;
-    cout << flori << endl;
-    cin >> arbori;
+
+     cin >> Gradina;
+     cout << Gradina << endl;
+     cin >> flori;
+     cout << flori << endl;
+     cin >> arbori;
+     cout << endl;
+     cout << arbori << endl;
+
+
+    GradinaPlante Gradina5;
+    Gradina5 = Gradina2;
+    cout << Gradina5 << endl;
+
+    if (Gradina4 < Gradina2) {
+        cout << "Gradina4 are < plante decat Gradina2." << endl;
+    }
+    else {
+        cout << "Gradina4 are >=  de plante decat Gradina2." << endl;
+    }
     cout << endl;
-    cout << arbori << endl;
-  
+    GradinaPlante Gradina6;
+    GradinaPlante Gradina7;
+    Gradina6 = Gradina5++;
+    cout << Gradina6 << endl;
+    cout << Gradina5 << endl;
+    Gradina7 = ++Gradina5;
+    cout << Gradina7 << endl;
+
+
+    Flori flori5;
+    flori5 = flori2;
+    cout << flori5;
+   
+    int x = flori2(2);
+    cout << "valoarea lui x este:"<<x<<endl;
+    
+    
+    if (flori4 < flori2)
+    {
+        cout << "flori4 are mai putine flori";
+    }
+    else
+    {
+        cout << "flori2 are maiputine flori";
+    }
+    cout << endl;
+    if (!flori2) {
+        cout << "flori2 nu are flori." << endl;
+    }
+    else {
+        cout << "flori2 are flori." << endl;
+    }
+    cout << endl;
+    Arbori arbori5;
+    arbori5 = arbori2;
+    cout << arbori5 << endl;
+    if (arbori4 || arbori2)
+    {
+        cout << " cel putin unul dintre arbori are un numar mai mare de 0 arbori";
+    }
+    else
+    {
+        cout << "Ambele obiecte Arbori au numarul de arbori egal cu 0";
+    }
+    cout << endl;
+    Arbori arbori7;
+    arbori7 = arbori5--;
+    cout << arbori7 << endl;
+    if (arbori7 && arbori2) {
+        cout << "Ambii arbori au inaltimi nenule." << endl;
+    }
+    else {
+        cout << "Cel pu?in unul dintre arbori are inaltimea zero." << endl;
+    }
+
+    
     delete[] durataviata;
     delete[] vectorDeCoduri;
     delete[] varste;
-    
- 
 }
