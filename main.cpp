@@ -1,5 +1,6 @@
-#include <iostream>
+﻿#include <iostream>
 #include<fstream>
+#include<string.h>
 using namespace std;
 
 class GradinaPlante {
@@ -401,7 +402,7 @@ public:
     {
         pretMinim= pretNou;
     }*/
-    friend ostream& operator<<(ostream& out, Flori&f) {
+    friend ostream& operator<<(ostream& out, Flori& f) {
         out << "Numar flori:" << f.nrFlori << endl;
         out << "Denumire:" << f.denumire << endl;
         out << "Culoare:" << f.culoare << endl;
@@ -423,31 +424,31 @@ public:
         out << "Cod floare: ";
         for (int i = 0;i < f.nrFlori;i++)
         {
-            out<< f.codFloare[i] << " ";
+            out << f.codFloare[i] << " ";
         }
 
     }
 
-    friend istream& operator>>(istream&in, Flori&f)
+    friend istream& operator>>(istream& in, Flori& f)
+    {
+        cout << "Numar flori:"; in >> f.nrFlori;
+        cout << "Denumire:"; in >> f.denumire;
+        cout << "Culoare:"; in >> f.culoare;
+        cout << "Pret minim:"; in >> f.pretMinim;
+        if (f.codFloare != nullptr)
         {
-            cout << "Numar flori:"; in >> f.nrFlori;
-            cout << "Denumire:"; in >> f.denumire;
-            cout << "Culoare:"; in >> f.culoare;
-            cout << "Pret minim:"; in >> f.pretMinim;
-            if (f.codFloare != nullptr)
-            {
-                delete[] f.codFloare;
-                f.codFloare = nullptr;
-            }
-            f.codFloare = new int[f.nrFlori];
-            cout << "COD:";
-            for (int i = 0;i < f.nrFlori;i++)
-            {
-                in >> f.codFloare[i];
-            }
-            return in;
-
+            delete[] f.codFloare;
+            f.codFloare = nullptr;
         }
+        f.codFloare = new int[f.nrFlori];
+        cout << "COD:";
+        for (int i = 0;i < f.nrFlori;i++)
+        {
+            in >> f.codFloare[i];
+        }
+        return in;
+
+    }
     friend ifstream& operator>>(ifstream& in, Flori& f)
     {
         in >> f.nrFlori; cout << endl;
@@ -468,14 +469,119 @@ public:
         return in;
 
     }
-    
+
+  
 };
 
-int Flori::pretMinim = 5;
 
+    int Flori::pretMinim = 5;
 
+    class FloriDecorative : public Flori
+    {private:
+        int nrFlori;
+        string denumire;
+        string culoare;
+        int* codFloare;
+        static int pretMinim;
+        const string lunaPlantare;
+    public:
+        int getnrFlori()
+        {
+            return this->nrFlori;
+        }
+        void setnrFlori(int nrFlori)
+        {
 
+            this->nrFlori = nrFlori;;
 
+        }
+
+        string getDenumire()
+        {
+            return this->denumire;
+        }
+        void setDenumire(string denumire)
+        {
+            if (denumire.length() > 2) {
+                this->denumire = denumire;
+            }
+        }
+
+        string getCuloare()
+        {
+            return this->culoare;
+        }
+        void setCuloare(string culoare)
+        {
+
+            this->culoare = culoare;
+
+        }
+
+        int* getcodFloare()
+        {
+            return this->codFloare;
+        }
+        int getcodFloare(int i) {
+            return this->codFloare[i];
+        }
+        void setcodFloare(int* codFloare)
+        {
+
+            this->codFloare = codFloare;
+        }
+
+        static int getpretMinim()
+
+        {
+            return pretMinim;
+        }
+       /* static void setpretMinim(int pretMinim)
+
+        {
+            Flori::pretMinim = pretMinim;
+
+        }*/
+        const string getlunaPlantare()
+        {
+            return this->lunaPlantare;
+        }
+
+        FloriDecorative() : lunaPlantare("mai") {
+            this->nrFlori = 1;
+            this->denumire = "lalea";
+            this->culoare = "galben";
+            this->codFloare = new int[this->nrFlori]();
+            this->codFloare[0] = 11;
+        }
+
+        FloriDecorative(string denumire, string culoare, const string luna, int nrFlori, int* codFloare) : lunaPlantare(luna) {
+            this->denumire = denumire;
+            this->culoare = culoare;
+            this->nrFlori = nrFlori;
+            this->codFloare = new int[this->nrFlori];
+            for (int i = 0; i < this->nrFlori; i++)
+                this->codFloare[i] = codFloare[i];
+        }
+        FloriDecorative(string denumire, string culoare) : lunaPlantare("mai") {
+            this->denumire = denumire;
+            this->culoare = culoare;
+
+        }
+
+        FloriDecorative(const FloriDecorative& f) : lunaPlantare(f.lunaPlantare) {
+            this->nrFlori = f.nrFlori;
+            this->denumire = f.denumire;
+            this->culoare = f.culoare;
+            this->codFloare = new int[this->nrFlori];
+            for (int i = 0; i < this->nrFlori; i++)
+                this->codFloare[i] = f.codFloare[i];
+        }
+       
+        
+        
+    };
+    
 
 
 class Arbori {
@@ -677,31 +783,173 @@ istream& operator>>(istream& in, Arbori& a)
     return in;
 
 }
-//
-//int main() {
-//    GradinaPlante Gradina;
-//    Gradina.afisare();
-//    int* durataviata = new int[2]{2, 4};;
-//    durataviata[0] = 2;
-//    durataviata[1] = 4;
-//    GradinaPlante Gradina2("Botanica", 2, 20, 1990, durataviata);
-//    Gradina2.afisare();
-//    GradinaPlante Gradina3 = Gradina2;
-//    Gradina3.afisare();
-//    GradinaPlante Gradina4("Japoneza", 34, 12);
-//    Gradina4.afisare();
-//
-//    Flori flori;
-//    flori.afisare();
-//    int* vectorDeCoduri = new int[2] {111, 112};
-//    vectorDeCoduri[0] = 111;
-//    vectorDeCoduri[1] = 112;
- /*   Flori flori2("Trandafir", "rosu", "mai", 2, vectorDeCoduri);
+
+
+
+class Plantatie :public Arbori {
+
+private:
+    string specie;
+    float inaltime;
+    int* varsta;
+    int nrArbori;
+    static float inaltimeMinima;
+    const string ziPlantare;
+public:
+    string getSpecie()
+    {
+        return this->specie;
+    }
+    void setSpecie(string specie)
+    {
+        if (specie.length() > 3) {
+            this->specie = specie;
+        }
+    }
+
+    float getinaltime()
+    {
+        return this->inaltime;
+    }
+    void setinaltime(float inaltime)
+    {
+
+        this->inaltime = inaltime;
+    }
+    int* getVarsta()
+    {
+        return this->varsta;
+    }
+    int getVarsta(int i) {
+        return this->varsta[i];
+    }
+
+    void setVarsta(int* varsta)
+    {
+
+        this->varsta = varsta;
+    }
+
+    int getnrArbori()
+    {
+        return this->nrArbori;
+    }
+    void setnrArbori(int nrArbori)
+    {
+
+        this->nrArbori = nrArbori;
+
+    }
+
+    static float getinaltimeMinima()
+
+    {
+        return inaltimeMinima;
+    }
+   /* static void set(float inaltimeMinima)
+
+    {
+        Arbori::inaltimeMinima = inaltimeMinima;
+
+    }*/
+    const string getziPlantare()
+    {
+        return this->ziPlantare;
+    }
+
+    Plantatie() : ziPlantare("luni") {
+        this->specie = "stejar";
+        this->inaltime = 17.5;
+        this->nrArbori = 1;
+        this->varsta = new int[this->nrArbori]();
+        this->varsta[0] = 10;
+    }
+
+    Plantatie(string specie, float inaltime, int nrArbori, int* varsta, const string zi) : ziPlantare(zi) {
+        this->specie = specie;
+        this->inaltime = inaltime;
+        this->nrArbori = nrArbori;
+        this->varsta = new int[this->nrArbori];
+        for (int i = 0; i < this->nrArbori; i++)
+            this->varsta[i] = varsta[i];
+
+    }
+    Plantatie(string specie, float inaltime, int nrArbori) : ziPlantare("marti") {
+        this->specie = specie;
+        this->inaltime = inaltime;
+        this->nrArbori = nrArbori;
+
+    }
+
+    Plantatie(const Plantatie& a) : ziPlantare(a.ziPlantare) {
+        this->specie = a.specie;
+        this->inaltime = a.inaltime;
+        this->nrArbori = a.nrArbori;
+        this->varsta = new int[this->nrArbori];
+        for (int i = 0; i < this->nrArbori; i++)
+            this->varsta[i] = a.varsta[i];
+    }
+};
+
+class Livada {
+private:
+    string nume;
+    int arie;
+public:
+    virtual ~Livada() {
+
+    }
+    virtual void metodaPura() = 0;
+    virtual float pret() = 0;
+    void metodaNonVirtualaPura() {
+        cout << "Non virtual pur";
+    }
+    Livada()
+    {
+        this->nume = "Livada";
+        this->arie = 300;
+    }
+};
+
+
+       
+
+  
+    
+  
+
+
+
+
+int main() {
+    cout << "Apel constructori GRADINA PLANTE:" << endl<<endl;
+    GradinaPlante Gradina;
+    Gradina.afisare();
+    int* durataviata = new int[2] {2, 4};;
+    durataviata[0] = 2;
+    durataviata[1] = 4;
+    GradinaPlante Gradina2("Botanica", 2, 20, 1990, durataviata);
+    Gradina2.afisare();
+    GradinaPlante Gradina3 = Gradina2;
+    Gradina3.afisare();
+    GradinaPlante Gradina4("Japoneza", 34, 12);
+    Gradina4.afisare();
+
+    cout <<endl<< "Apel constructori FLORI:" << endl << endl;
+
+    Flori flori;
+    flori.afisare();
+    int* vectorDeCoduri = new int[2] {111, 112};
+    vectorDeCoduri[0] = 111;
+    vectorDeCoduri[1] = 112;
+    Flori flori2("Trandafir", "rosu", "mai", 2, vectorDeCoduri);
     flori2.afisare();
     Flori flori3 = flori2;
     flori3.afisare();
     Flori flori4("Lalea", "alb");
     flori4.afisare();
+
+    cout <<endl<< "Apel constructori ARBORI:" << endl << endl;
 
     Arbori arbori;
     arbori.afisare();
@@ -716,14 +964,15 @@ istream& operator>>(istream& in, Arbori& a)
     arbori4.afisare();
     cout << arbori.getinaltime();
 
-    cout << flori;*/
+   // cout << flori;
 
     // cin >> arbori;
-
-
-   /* cout << "-------------------------------------";
     cout << endl;
-    cout << arbori << endl;
+    cout << endl << "Apel get-eri și set-eri:"<<endl;
+
+    cout << "-------------------------------------";
+  /*  cout << endl;
+    cout << arbori << endl;*/
 
     cout << "-------------------------------------" << endl;
     cout << Gradina.getNumeGradina() << endl;
@@ -744,15 +993,20 @@ istream& operator>>(istream& in, Arbori& a)
     cout << arbori.getnrArbori() << endl;
     cout << arbori.getinaltimeMinima() << endl;
     cout << arbori.getSpecie() << endl;
+    
+    cout << endl;
+    cout << "Date introduse de la tastatura:" << endl;
 
-
-     cin >> Gradina;
+    /* cin >> Gradina;
      cout << Gradina << endl;
      cin >> flori;
      cout << flori << endl;
      cin >> arbori;
      cout << endl;
-     cout << arbori << endl;
+     cout << arbori << endl;*/
+
+     cout << endl;
+     cout << "Apel constructori:" << endl;
 
 
     GradinaPlante Gradina5;
@@ -774,6 +1028,7 @@ istream& operator>>(istream& in, Arbori& a)
     Gradina7 = ++Gradina5;
     cout << Gradina7 << endl;
 
+    cout << endl;
 
     Flori flori5;
     flori5 = flori2;
@@ -819,64 +1074,64 @@ istream& operator>>(istream& in, Arbori& a)
     }
     else {
         cout << "Cel putin unul dintre arbori are inaltimea zero." << endl;
-    }*/
+    }
+    cout << endl << "VECTORI:"<<endl;
 
-    //const int numarGradini = 3;
-    //GradinaPlante gradini[numarGradini] = {
-    //    GradinaPlante("Gradina1", 10.0, 2000, 5, durataviata ),
-    //    GradinaPlante("Gradina2", 15.0, 2010, 3, durataviata),
-    //    GradinaPlante("Gradina3", 12.0, 2005, 4, durataviata ) 
-    //};
-    //GradinaPlante::setTVABilet(0.21);
-    //for (int i = 0; i < numarGradini; i++) {
-    //    cout << "Gradina " << gradini[i].getanInfiintareGradina() << ": " << gradini[i].getPretIntrare() << " lei cu TVA\n";
-    //}
+    const int numarGradini = 3;
+    GradinaPlante gradini[numarGradini] = {
+        GradinaPlante("Gradina1", 10.0, 2000, 5, durataviata ),
+        GradinaPlante("Gradina2", 15.0, 2010, 3, durataviata),
+        GradinaPlante("Gradina3", 12.0, 2005, 4, durataviata ) 
+    };
+    GradinaPlante::setTVABilet(0.21);
+    for (int i = 0; i < numarGradini; i++) {
+        cout << "Gradina " << gradini[i].getanInfiintareGradina() << ": " << gradini[i].getPretIntrare() << " lei cu TVA\n";
+    }
+    cout << endl << "VECTORI:" << endl;
 
-    //const int numarFlori = 2;
-    //Flori flori[numarFlori] = {
-    //    Flori("Trandafir", "rosu", "mai", 2, vectorDeCoduri),
-    //    Flori("Lalele", "Galben","aprilie",3, vectorDeCoduri)
-    //  
-    //};
-    //for (int i = 0; i < numarFlori; i++) {
-    //    cout << "Florile " << flori[i] << " au pretul minim de " << Flori::getpretMinim() << " lei\n";
-    //}
-    //const int numarArbori = 2;
-    //Arbori arbori[numarArbori] = {
-    //    Arbori("brad", 35.5, 2, varste, "joi"),
-    //    Arbori("pin", 22.0,1,varste,"vineri")
-    //};
-    //Arbori::setinaltimeMinima(1.8);
-    //for (int i = 0; i < numarArbori; ++i) {
-    //    cout << "Arborii de specia " << arbori[i] << " au inaltimea minima de " << Arbori::getinaltimeMinima() << " metri\n";
-    //}
-    //const int n = 3;
-    //const int m = 2;
-    //GradinaPlante gradini[n][m] = {
-    //    { GradinaPlante("Gradina1", 20.0, 2000, 3, durataviata),
-    //      GradinaPlante("Gradina2", 25.5, 2010, 2, durataviata)},
-    //    { GradinaPlante("Gradina3", 18.0, 1998, 4, durataviata),
-    //      GradinaPlante("Gradina4", 22.8, 2005, 1, durataviata) },
-    //    { GradinaPlante("Gradina5", 30.0, 2015, 5, durataviata),
-         // GradinaPlante("Gradina6", 28.3, 2008, 3, durataviata) }
-//    };
-//    for (int i = 0; i < n; ++i) {
-//        for (int j = 0; j < m; ++j) {
-//    
-//            cout << "Afi?are GradinaPlante [" << i << "][" << j << "]\n";
-//            //gradini[i][j].afisare();
-//        }
-//        
-//    }
-//
-//
-//
-//    delete[] durataviata;
-//    delete[] varste;
-//}
 
-int main() {
-    GradinaPlante Gradina;
+    const int numarFlori = 2;
+    Flori flori1[numarFlori] = {
+        Flori("Trandafir", "rosu", "mai", 2, vectorDeCoduri),
+        Flori("Lalele", "Galben","aprilie",3, vectorDeCoduri)
+      
+    };
+    for (int i = 0; i < numarFlori; i++) {
+        cout << "Florile " << flori1[i] << " au pretul minim de " << Flori::getpretMinim() << " lei\n";
+    }
+    cout << endl << "VECTORI:" << endl;
+
+    const int numarArbori = 2;
+    Arbori arbori1[numarArbori] = {
+        Arbori("brad", 35.5, 2, varste, "joi"),
+        Arbori("pin", 22.0,1,varste,"vineri")
+    };
+    Arbori::setinaltimeMinima(1.8);
+    for (int i = 0; i < numarArbori; ++i) {
+        cout << "Arborii de specia " << arbori1[i] << " au inaltimea minima de " << Arbori::getinaltimeMinima() << " metri\n";
+    }
+    const int n = 3;
+    const int m = 2;
+    GradinaPlante gradini1[n][m] = {
+        { GradinaPlante("Gradina1", 20.0, 2000, 3, durataviata),
+          GradinaPlante("Gradina2", 25.5, 2010, 2, durataviata)},
+        { GradinaPlante("Gradina3", 18.0, 1998, 4, durataviata),
+          GradinaPlante("Gradina4", 22.8, 2005, 1, durataviata) },
+        { GradinaPlante("Gradina5", 30.0, 2015, 5, durataviata),
+          GradinaPlante("Gradina6", 28.3, 2008, 3, durataviata) }
+    };
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+    
+            cout << "Afisare GradinaPlante [" << i << "][" << j << "]\n";
+            gradini1[i][j].afisare();
+        }
+        
+    }
+
+
+//int main() {
+   /* GradinaPlante Gradina;
     cout << Gradina << endl;
 
     int* durataviata = new int[2] {2, 4};
@@ -912,11 +1167,11 @@ int main() {
     Arbori arbori3 = arbori2;
     cout << arbori3 << endl;
 
-    Arbori arbori4("salcam", 21.7, 20);
-    cout << arbori4 << endl;
+    Arbori arbori4("salcam", 21.7, 2);
+    cout << arbori4 << endl;*/
 
-    cout << arbori.getinaltime() << endl;
-
+    /*cout << arbori.getinaltime() << endl;*/
+/*
     cout << flori;
 
     cout << "-------------------------------------" << endl;
@@ -990,7 +1245,7 @@ int main() {
         cout << "Ambele obiecte Arbori au numarul de arbori egal cu 0" << endl;
     }
 
-    cout << endl;
+    cout << endl;/*
 
     Arbori arbori7;
     arbori7 = arbori5--;
@@ -1014,45 +1269,55 @@ int main() {
 
     for (int i = 0; i < numarGradini; ++i) {
         cout << gradini[i] << endl;
-    }
+    }*/
 
-    Flori f8;
-    cin >> f8;
-    ofstream file("fisier.txt", ios::out);
-   /* file <<f8;*/
+   // Flori f8;
+   // cin >> f8;
+   // ofstream file("fisier.txt", ios::out);
+   ///* file <<f8;*/
 
-    ifstream citire("fisier.txt", ios::in);
-    Flori f9;
-    citire >> f9;
-    cout << f9;
+   // ifstream citire("fisier.txt", ios::in);
+   // Flori f9;
+   // citire >> f9;
+   // cout << f9;
 
-    Flori f10;
-    citire >> f10;
-    cout <<endl<< f10;
+   // Flori f10;
+   // citire >> f10;
+   // cout <<endl<< f10;
 
-    char* text = new char[5];
-    strcpy_s(text, 5, "text:");
-    int variabila = 23;
-    float valReala =24.5;
-    fstream fisierBinar("fisierBinar.g59", ios::binary | ios::out);
-    fisierBinar.close();
+   // char* text = new char[5];
+   // strcpy_s(text, 5, "text:");
+   // int variabila = 23;
+   // float valReala =24.5;
+   // fstream fisierBinar("fisierBinar.g59", ios::binary | ios::out);
+   // fisierBinar.close();
 
-    Arbori a8;
-    cin >> a8;
-    ofstream file2("fisier.txt2", ios::out);
-    file2 << a8;
+   // Arbori a8;
+   // cin >> a8;
+   // ofstream file2("fisier.txt2", ios::out);
+   // file2 << a8;
 
-    ifstream citire2("fisier.txt2", ios::in);
-    Arbori a9;
-    citire2 >> a9;
-    cout << a9;
+   // ifstream citire2("fisier.txt2", ios::in);
+   // Arbori a9;
+   // citire2 >> a9;
+   // cout << a9;
 
-    char* text2= new char[4];
-    strcpy_s(text, 4, "text:");
-    int variabila2 = 22;
-    float valReala2 = 23.5;
-    fstream fisierBinar2("fisierBinar.gp", ios::binary | ios::out);
-    fisierBinar2.close();
+   // char* text2= new char[4];
+   // strcpy_s(text, 4, "text:");
+   // int variabila2 = 22;
+   // float valReala2 = 23.5;
+   // fstream fisierBinar2("fisierBinar.gp", ios::binary | ios::out);
+  //  fisierBinar2.close();
+
+cout << "------------------------" << endl;
+FloriDecorative fd;
+fd.afisare();
+
+cout << "------------------------" << endl;
+Plantatie p;
+p.afisare();
+
+
 
     delete[] durataviata;
     delete[] vectorDeCoduri;
